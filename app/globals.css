@@ -1,0 +1,59 @@
+
+.input-wrapper {
+    margin: 10px 0;
+}
+
+.input-field{
+    width: 215px;
+    height: 30px;
+}
+
+.button{
+    width: 215px;
+    height: 30px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.container {
+    text-align: center;
+}
+
+.button-login {
+    border: 1px solid skyblue;
+    padding: 15px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    color: skyblue;
+    margin: 10px;
+    transition: 0.5s ease-in-out;
+}
+
+.button-login:hover {
+    background-color: skyblue;
+    color: white;
+}
+
+.input-error {
+    position: absolute;
+    padding: 8px;
+    color: red;
+    font-size: 18px;
+}
+
+table th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 10px;
+}
+
+table td button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+table img {
+    width: 80px;
+    height: 80px;
+    border-radius: 5%;
+}
