@@ -117,7 +117,8 @@ table img {
   width: 50%;
 }
 
-.main-page-banner {
+.main-page-banner,
+.resturant-page-banner {
   background-image: url("https://a.storyblok.com/f/88809/1150x450/30a9c4f9a6/igevia_header_fastfood01_450.jpg");
   background-color: rgb(0, 0, 0, 0.7);
   background-blend-mode: multiply;
@@ -127,6 +128,11 @@ table img {
 }
 
 .main-page-banner h1 {
+  text-align: center;
+}
+
+.resturant-page-banner h1 {
+  font-size: 45px;
   text-align: center;
 }
 
@@ -171,4 +177,146 @@ table img {
   padding: 10px 5px 5px 5px;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
+}
+
+.resturant-list-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  margin-bottom: 50px;
+  gap: 20px;
+}
+
+.resturant-wrapper {
+  width: 45%;
+  background-color: orange;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.resturant-wrapper .heading-wrapper,
+.resturant-wrapper .address-wrapper {
+  padding-left: 15px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.food-item-wrapper {
+  max-width: 1034px;
+  margin: 50px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.food-item-wrapper .list-item {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+  border: 1px solid #eee;
+}
+
+.food-item-wrapper .list-item:hover {
+  transform: translateY(-3px);
+}
+
+.food-item-wrapper .list-item img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.food-item-wrapper .list-item > div:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.food-item-wrapper .list-item div:nth-child(1) {
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.food-item-wrapper .list-item div:nth-child(2) {
+  color: #e67e22;
+  font-size: 1.1rem;
+}
+
+.food-item-wrapper .description {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: normal;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.food-item-wrapper .list-item button {
+  width: fit-content;
+  color: white;
+  border: none;
+  background-color: orange;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.food-item-wrapper .list-item button:hover {
+  background-color: #e67e22;
+}
+
+.detail-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  background: linear-gradient(
+    135deg,
+    #ff9800,
+    #e67e22
+  );
+  padding: 20px;
+  border-radius: 15px;
+  margin: 20px auto;
+  max-width: 1000px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: white;
+  gap: 15px;
+}
+
+.detail-wrapper h3 {
+  flex: 1 1 200px; 
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  border-left: 2px solid rgba(255, 255, 255, 0.3); 
+  padding-left: 15px;
+}
+
+.detail-wrapper h3:first-child {
+  border-left: none;
+}
+
+.detail-wrapper h3 span {
+  font-weight: 800;
+  margin-right: 5px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  display: block; 
+  opacity: 0.9;
 }

@@ -7,7 +7,7 @@ const ResturantSignup = () => {
   const [c_Password, setc_Password] = useState("");
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
-  const [Address, setAddress] = useState("");
+  const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
   const router = useRouter();
   const [error, setError] = useState(false);
@@ -20,16 +20,16 @@ const ResturantSignup = () => {
     }else {
       setPasswordError(false);
     }
-    if(!email || !password || !c_Password || !name || !city || !Address || !contact){
+    if(!email || !password || !c_Password || !name || !city || !address || !contact){
       setError(true);
       return false;
     }else{
       setError(false);
     }
-    console.log(email, password, c_Password, name, city, Address, contact);
+    console.log(email, password, c_Password, name, city, address, contact);
     let response = await fetch("http://localhost:3000/api/resturants", {
       method: "POST",
-      body: JSON.stringify({ email, password, name, city, Address, contact }),
+      body: JSON.stringify({ email, password, name, city, address, contact }),
     });
     response = await response.json();
     console.log(response);
@@ -120,11 +120,11 @@ const ResturantSignup = () => {
             type="text"
             placeholder="Enter Full Address"
             className="input-field"
-            value={Address}
+            value={address}
             onChange={(event) => setAddress(event.target.value)}
           />
           {
-            error && !Address && <span className="input-error">Please enter valid address</span>
+            error && !address && <span className="input-error">Please enter valid address</span>
           }
         </div>
         <div className="input-wrapper">

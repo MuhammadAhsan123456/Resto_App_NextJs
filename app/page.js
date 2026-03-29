@@ -2,14 +2,18 @@
 import React, { useEffect, useState } from "react";
 import CustomerHeader from "./_components/CustomerHeader";
 import Footer from "./_components/Footer";
+import { useRouter } from "next/navigation";
 
 const page = () => {
   const [locations, setLocations] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [showLocation, setShowLocation] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     loadLocation();
+    loadRestaurants();
   }, []);
 
   const loadLocation = async () => {
@@ -19,12 +23,29 @@ const page = () => {
       setLocations(response.result);
     }
   };
-  console.log(locations);
+
+  const loadRestaurants = async (params) => {
+    let url = "http://localhost:3000/api/customer";
+    if(params?.location) {
+      url = url+"?location="+params.location;
+    }else if (params?.resturant){
+      url = url+"?resturant="+params.resturant;
+    }
+
+    let response = await fetch(url);
+    response = await response.json();
+    if (response.success) {
+      setRestaurants(response.result);
+    }
+  };
 
   const handleListItem = (item) => {
     setSelectedLocation(item);
     setShowLocation(false);
+    loadRestaurants({ location: item });
   };
+
+  console.log(restaurants);
 
   return (
     <main>
@@ -49,8 +70,25 @@ const page = () => {
             type="text"
             className="search-input"
             placeholder="Enter Food and Restaurant Name"
+            onChange={(event)=>loadRestaurants({resturant:event.target.value})}
           />
         </div>
+      </div>
+      <div className="resturant-list-container">
+        {
+        restaurants.map((item) => (
+          <div onClick={()=>router.push('explore/'+item.name+"?id="+item._id)} className="resturant-wrapper">
+            <div className="heading-wrapper"> 
+              <h3>{item.name}</h3>
+              <h5>Contact: {item.contact}</h5>
+            </div>
+            <div className="address-wrapper"> 
+              <div>{item.city}</div>
+              <div>{item.address} Email: {item.email}</div>
+            </div>
+          </div>
+        ))
+        }
       </div>
       <Footer />
     </main>
