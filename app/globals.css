@@ -320,3 +320,48 @@ table img {
   display: block; 
   opacity: 0.9;
 }
+
+.list-item-block-1 {
+  width: 20%;
+}
+
+.list-item-block-2 {
+  width: 80%;
+}
+
+.list-item-block-3 {
+  width: 20%;
+}
+
+.total-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid orange;
+  padding-bottom: 20px;
+}
+
+.total-wrapper .row {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 20%;
+  margin-left: 20%;
+  color: orange;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.total-wrapper .block-1 {
+  width: 70%;
+}
+.total-wrapper .block-2 {
+  width: 30%;
+}
+
+.block-2 button {
+  padding: 10px;
+  border: none;
+  background-color: orange;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
