@@ -3,13 +3,23 @@ import { useState } from 'react';
 import CustomerHeader from '../_components/CustomerHeader'
 import ResturantFooter from '../_components/Footer'
 import { DELIVERY_CHARGE, TAX } from '../lib/constant';
+import { useRouter } from 'next/navigation';
 
 const page = () => {
     const [cartStorage, setCartStorage] = useState(JSON.parse(localStorage.getItem("cart")));
     const [total]= useState(()=>cartStorage.length==1?cartStorage[0].price:cartStorage.reduce((a,b)=>{
         return a.price + b.price
     }));
+    const router = useRouter();
     console.log(total);
+
+    const orderNow = () => {
+      if(JSON.parse(localStorage.getItem("user"))){
+        router.push('/order');
+      }else {
+        router.push('/user-auth?order=true');
+      }
+    }
     
   return (
     <div>
@@ -51,7 +61,7 @@ const page = () => {
         </div>
         </div>
         <div className='block-2'>
-            <button>Order Now</button>
+            <button onClick={orderNow}>Order Now</button>
         </div>
       </div>
       <ResturantFooter />

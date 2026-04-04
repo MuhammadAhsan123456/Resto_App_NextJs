@@ -1,10 +1,15 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const CustomerHeader = (props) => {
+  const userStorage = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(userStorage ? userStorage : undefined);
   const [cartNumber, setCartNumber] = useState(0);
   const [cartItem, setCartItem] = useState([]);
+  const router = useRouter();
+  console.log(userStorage);
 
   // Load initial cart
   useEffect(() => {
@@ -21,13 +26,16 @@ const CustomerHeader = (props) => {
     if (props.cartData) {
       let localCartItem = [...cartItem];
       // Check if different restaurant
-      if (localCartItem.length > 0 && localCartItem[0].resto_id !== props.cartData.resto_id) {
+      if (
+        localCartItem.length > 0 &&
+        localCartItem[0].resto_id !== props.cartData.resto_id
+      ) {
         localCartItem = [props.cartData];
         localStorage.removeItem("cart");
       } else {
         localCartItem.push(props.cartData);
       }
-      
+
       setCartItem(localCartItem);
       setCartNumber(localCartItem.length);
       localStorage.setItem("cart", JSON.stringify(localCartItem));
@@ -37,16 +45,23 @@ const CustomerHeader = (props) => {
   // Handle Remove from Cart
   useEffect(() => {
     if (props.removeCartData) {
-      let localCartItem = cartItem.filter((item) => item._id !== props.removeCartData);
+      let localCartItem = cartItem.filter(
+        (item) => item._id !== props.removeCartData,
+      );
       setCartItem(localCartItem);
       setCartNumber(localCartItem.length); // Direct length use karein (cartNumber - 1 ki jagah)
       localStorage.setItem("cart", JSON.stringify(localCartItem));
-      
+
       if (localCartItem.length === 0) {
         localStorage.removeItem("cart");
       }
-    }
+    } 
   }, [props.removeCartData]);
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    router.push("/user-auth");
+  };
 
   return (
     <div className="header-wrapper">
@@ -58,11 +73,34 @@ const CustomerHeader = (props) => {
         />
       </div>
       <ul>
-        <li><Link href="/">Home</Link></li>
-        <li><Link href="/">Login</Link></li>
-        <li><Link href="/">Signup</Link></li>
-        <li><Link href={cartNumber?"/cart":"#"}>Cart({cartNumber})</Link></li>
-        <li><Link href="/">Add Restaurant</Link></li>
+        <li>
+          <Link href="/">Home</Link>
+        </li>
+        {user ? (
+          <>
+            <li>
+              <Link href="/#">{user?.name}</Link>
+            </li>
+            <li>
+              <button onClick={logout}>Logout</button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <Link href="/">Login</Link>
+            </li>
+            <li>
+              <Link href="/">Signup</Link>
+            </li>
+          </>
+        )}
+        <li>
+          <Link href={cartNumber ? "/cart" : "#"}>Cart({cartNumber})</Link>
+        </li>
+        <li>
+          <Link href="/">Add Restaurant</Link>
+        </li>
       </ul>
     </div>
   );

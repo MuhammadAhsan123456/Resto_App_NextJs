@@ -365,3 +365,12 @@ table img {
   border-radius: 5px;
   cursor: pointer;
 }
+
+button.button-link {
+    background: unset;
+    border: unset;
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 1rem;
+}

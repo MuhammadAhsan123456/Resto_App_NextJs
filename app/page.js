@@ -26,10 +26,10 @@ const page = () => {
 
   const loadRestaurants = async (params) => {
     let url = "http://localhost:3000/api/customer";
-    if(params?.location) {
-      url = url+"?location="+params.location;
-    }else if (params?.resturant){
-      url = url+"?resturant="+params.resturant;
+    if (params?.location) {
+      url = url + "?location=" + params.location;
+    } else if (params?.resturant) {
+      url = url + "?resturant=" + params.resturant;
     }
 
     let response = await fetch(url);
@@ -52,7 +52,7 @@ const page = () => {
       <CustomerHeader />
       <div className="main-page-banner">
         <h1>Food Delivery App</h1>
-        <div className="input-wrapper">
+        {/* <div className="input-wrapper">
           <input
             value={selectedLocation}
             onClick={() => setShowLocation(true)}
@@ -70,11 +70,71 @@ const page = () => {
             type="text"
             className="search-input"
             placeholder="Enter Food and Restaurant Name"
-            onChange={(event)=>loadRestaurants({resturant:event.target.value})}
+            onChange={(event) =>
+              loadRestaurants({ resturant: event.target.value })
+            }
+          />
+        </div> */}
+
+        <div className="input-wrapper">
+          <input
+            value={selectedLocation}
+            onClick={() => setShowLocation(true)}
+            type="text"
+            className="select-input"
+            placeholder="Select Place"
+            readOnly // 👈 Ye add karne se "onChange" wala error khatam ho jayega
+          />
+
+          <ul className="location-list">
+            {showLocation &&
+              locations.map(
+                (
+                  item,
+                  index, // 👈 Index ya item use karein key ke liye
+                ) => (
+                  <li key={index} onClick={() => handleListItem(item)}>
+                    {item}
+                  </li>
+                ),
+              )}
+          </ul>
+
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Enter Food and Restaurant Name"
+            onChange={(event) =>
+              loadRestaurants({ resturant: event.target.value })
+            }
           />
         </div>
       </div>
       <div className="resturant-list-container">
+        {restaurants.map((item) => (
+          // Yahan key add karni hai 👇
+          <div
+            key={item._id}
+            onClick={() =>
+              router.push("explore/" + item.name + "?id=" + item._id)
+            }
+            className="resturant-wrapper"
+          >
+            <div className="heading-wrapper">
+              <h3>{item.name}</h3>
+              <h5>Contact: {item.contact}</h5>
+            </div>
+            <div className="address-wrapper">
+              <div>{item.city}</div>
+              <div>
+                {item.address} Email: {item.email}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* <div className="resturant-list-container">
         {
         restaurants.map((item) => (
           <div onClick={()=>router.push('explore/'+item.name+"?id="+item._id)} className="resturant-wrapper">
@@ -89,7 +149,8 @@ const page = () => {
           </div>
         ))
         }
-      </div>
+      </div> */}
+
       <Footer />
     </main>
   );
