@@ -55,7 +55,15 @@ const CustomerHeader = (props) => {
       if (localCartItem.length === 0) {
         localStorage.removeItem("cart");
       }
-    } 
+    }
+  }, [props.removeCartData]);
+
+  useEffect(() => {
+    if (props.removeCartData) {
+      setCartItem([]);
+      setCartNumber(0);
+      localStorage.removeItem("cart");
+    }
   }, [props.removeCartData]);
 
   const logout = () => {
@@ -79,7 +87,7 @@ const CustomerHeader = (props) => {
         {user ? (
           <>
             <li>
-              <Link href="/#">{user?.name}</Link>
+              <Link href="/myprofile">{user?.name}</Link>
             </li>
             <li>
               <button onClick={logout}>Logout</button>
