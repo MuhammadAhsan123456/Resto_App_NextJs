@@ -283,11 +283,7 @@ table img {
 .detail-wrapper {
   display: flex;
   flex-wrap: wrap;
-  background: linear-gradient(
-    135deg,
-    #ff9800,
-    #e67e22
-  );
+  background: linear-gradient(135deg, #ff9800, #e67e22);
   padding: 20px;
   border-radius: 15px;
   margin: 20px auto;
@@ -298,13 +294,13 @@ table img {
 }
 
 .detail-wrapper h3 {
-  flex: 1 1 200px; 
+  flex: 1 1 200px;
   margin: 0;
   font-size: 1rem;
   font-weight: 500;
   display: flex;
   align-items: center;
-  border-left: 2px solid rgba(255, 255, 255, 0.3); 
+  border-left: 2px solid rgba(255, 255, 255, 0.3);
   padding-left: 15px;
 }
 
@@ -317,7 +313,7 @@ table img {
   margin-right: 5px;
   text-transform: uppercase;
   font-size: 0.85rem;
-  display: block; 
+  display: block;
   opacity: 0.9;
 }
 
@@ -367,10 +363,24 @@ table img {
 }
 
 button.button-link {
-    background: unset;
-    border: unset;
-    color: blue;
-    cursor: pointer;
-    text-decoration: underline;
-    font-size: 1rem;
+  background: unset;
+  border: unset;
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem;
+}
+
+.auth-container {
+  display: flex;
+}
+
+.login-wrapper,
+.signup-wrapper {
+  text-align: center;
+  border: 1px solid #ccc;
+  width: 50%;
+  height: 500px;
+  margin: 10px;
+  padding: 20px;
 }

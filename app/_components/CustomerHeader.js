@@ -4,28 +4,34 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const CustomerHeader = (props) => {
-  const userStorage = JSON.parse(localStorage.getItem("user"));
-  const [user, setUser] = useState(userStorage ? userStorage : undefined);
+  // State ko initial empty ya undefined rakhein
+  const [user, setUser] = useState(undefined);
   const [cartNumber, setCartNumber] = useState(0);
   const [cartItem, setCartItem] = useState([]);
   const router = useRouter();
-  console.log(userStorage);
 
-  // Load initial cart
+  // Sab data initialization yahan useEffect mein karein
   useEffect(() => {
-    const localData = localStorage.getItem("cart");
-    if (localData) {
-      const parsedData = JSON.parse(localData);
-      setCartItem(parsedData);
-      setCartNumber(parsedData.length);
+    // Ab ye block sirf browser mein chalega
+    const userStorage = localStorage.getItem("user");
+    const cartStorage = localStorage.getItem("cart");
+
+    if (userStorage) {
+      setUser(JSON.parse(userStorage));
     }
-  }, []);
+
+    if (cartStorage) {
+      const parsedCart = JSON.parse(cartStorage);
+      setCartItem(parsedCart);
+      setCartNumber(parsedCart.length);
+    }
+  }, []); // Ye sirf component mount hone par ek baar chalega
 
   // Handle Add to Cart
   useEffect(() => {
     if (props.cartData) {
       let localCartItem = [...cartItem];
-      // Check if different restaurant
+      
       if (
         localCartItem.length > 0 &&
         localCartItem[0].resto_id !== props.cartData.resto_id
@@ -46,10 +52,10 @@ const CustomerHeader = (props) => {
   useEffect(() => {
     if (props.removeCartData) {
       let localCartItem = cartItem.filter(
-        (item) => item._id !== props.removeCartData,
+        (item) => item._id !== props.removeCartData
       );
       setCartItem(localCartItem);
-      setCartNumber(localCartItem.length); // Direct length use karein (cartNumber - 1 ki jagah)
+      setCartNumber(localCartItem.length);
       localStorage.setItem("cart", JSON.stringify(localCartItem));
 
       if (localCartItem.length === 0) {
@@ -58,16 +64,9 @@ const CustomerHeader = (props) => {
     }
   }, [props.removeCartData]);
 
-  useEffect(() => {
-    if (props.removeCartData) {
-      setCartItem([]);
-      setCartNumber(0);
-      localStorage.removeItem("cart");
-    }
-  }, [props.removeCartData]);
-
   const logout = () => {
     localStorage.removeItem("user");
+    setUser(undefined); // State update karein taaki UI foran change ho
     router.push("/user-auth");
   };
 
@@ -81,34 +80,23 @@ const CustomerHeader = (props) => {
         />
       </div>
       <ul>
-        <li>
-          <Link href="/">Home</Link>
-        </li>
+        <li><Link href="/">Home</Link></li>
         {user ? (
           <>
-            <li>
-              <Link href="/myprofile">{user?.name}</Link>
-            </li>
-            <li>
-              <button onClick={logout}>Logout</button>
-            </li>
+            <li><Link href="/myprofile">{user?.name}</Link></li>
+            <li><button onClick={logout}>Logout</button></li>
           </>
         ) : (
           <>
-            <li>
-              <Link href="/">Login</Link>
-            </li>
-            <li>
-              <Link href="/">Signup</Link>
-            </li>
+            <li><Link href="/user-auth">Login</Link></li>
+            <li><Link href="/user-auth">Signup</Link></li>
           </>
         )}
         <li>
           <Link href={cartNumber ? "/cart" : "#"}>Cart({cartNumber})</Link>
         </li>
-        <li>
-          <Link href="/">Add Restaurant</Link>
-        </li>
+        <li><Link href="/">Add Restaurant</Link></li>
+        <li><Link href="/deliverypartner">Delivery Partners</Link></li>
       </ul>
     </div>
   );

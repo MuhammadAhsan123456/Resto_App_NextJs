@@ -5,61 +5,91 @@ import ResturantFooter from "../_components/Footer";
 import { DELIVERY_CHARGE, TAX } from "../lib/constant";
 import { useRouter } from "next/navigation";
 
-const page = () => {
-  const [userStorage, setUserStorage] = useState(
-    JSON.parse(localStorage.getItem("user")),
-  );
-  const [cartStorage, setCartStorage] = useState(
-    JSON.parse(localStorage.getItem("cart")),
-  );
-  const [total] = useState(() =>
-    cartStorage?.length == 1
-      ? cartStorage[0].price
-      : cartStorage?.reduce((a, b) => {
-          return a.price + b.price;
-        }),
-  );
-  console.log(total);
-
+const OrderPage = () => {
+  const [userStorage, setUserStorage] = useState(null);
+  const [cartStorage, setCartStorage] = useState([]);
+  const [total, setTotal] = useState(0);
   const [removeCartData, setRemoveCartData] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (!total) {
+    // LocalStorage access sirf useEffect ke andar (Client Side)
+    const storedUser = localStorage.getItem("user");
+    const storedCart = localStorage.getItem("cart");
+
+    if (storedUser && storedCart) {
+      const user = JSON.parse(storedUser);
+      const cart = JSON.parse(storedCart);
+      
+      setUserStorage(user);
+      setCartStorage(cart);
+
+      // Total calculate karne ki sahi logic
+      const calculatedTotal = cart.reduce((acc, item) => acc + Number(item.price), 0);
+      setTotal(calculatedTotal);
+    } else {
+      // Agar cart khali hai toh home pe bhej dein
       router.push("/");
     }
-  }, [total]);
+  }, [router]);
 
   const orderNow = async () => {
-    let user_id = JSON.parse(localStorage.getItem("user"))._id;
-    let cart = JSON.parse(localStorage.getItem("cart"));
-    let foodItemIds = cart.map((item) => item._id).toString();
-    let deliveryBoy_id = "64a1c8e5b9d2c0e7f0e7b8ab";
-
-    let resto_id = cart[0].resto_id;
-    let collection = {
-      user_id,
-      resto_id,
-      foodItemIds,
-      deliveryBoy_id,
-      status: "confirm",
-      amount: total + DELIVERY_CHARGE + (total * TAX) / 100,
-    };
-
-    let response = await fetch("http://localhost:3000/api/orders", {
-      method: "POST",
-      body: JSON.stringify(collection),
-    });
-    response = await response.json();
-    if (response.success) {
-      alert("Your order has been placed successfully");
-      setRemoveCartData(true);
-      router.push("/myprofile");
-    } else {
-      alert("Something went wrong, please try again later");
+    if (!userStorage || cartStorage.length === 0) {
+      alert("User or Cart data missing");
+      return;
     }
 
-    console.log(collection);
+    const user_id = userStorage._id;
+    const city = userStorage.city;
+    const foodItemIds = cartStorage.map((item) => item._id).toString();
+
+    try {
+      // 1. Delivery Boy Fetch karein (City wise)
+      let deliveryBoyResponse = await fetch(`http://localhost:3000/api/deliverypartners/${city}`);
+      let deliveryData = await deliveryBoyResponse.json();
+      
+      // Note: check karein aapki API "result" bhej rahi hai ya kuch aur
+      let deliveryBoyIds = deliveryData.result ? deliveryData.result.map((item) => item._id) : [];
+
+      if (deliveryBoyIds.length === 0) {
+        alert("Is city mein koi delivery partner available nahi hai.");
+        return;
+      }
+
+      // Randomly ek delivery boy select karein
+      const deliveryBoy_id = deliveryBoyIds[Math.floor(Math.random() * deliveryBoyIds.length)];
+      console.log("Selected Delivery Boy ID:", deliveryBoy_id);
+
+      const resto_id = cartStorage[0].resto_id;
+      const collection = {
+        user_id,
+        resto_id,
+        foodItemIds,
+        deliveryBoy_id,
+        status: "confirm",
+        amount: total + DELIVERY_CHARGE + (total * TAX) / 100,
+      };
+
+      // 2. Order POST Request
+      let response = await fetch("http://localhost:3000/api/orders", {
+        method: "POST",
+        body: JSON.stringify(collection),
+      });
+
+      let orderResult = await response.json();
+      
+      if (orderResult.success) {
+        alert("Your order has been placed successfully");
+        localStorage.removeItem("cart"); // Order ke baad cart saaf karein
+        setRemoveCartData(true);
+        router.push("/myprofile");
+      } else {
+        alert("Order place karne mein masla hua, dubara koshish karein.");
+      }
+    } catch (error) {
+      console.error("Order Error:", error);
+      alert("API connection mein masla hai.");
+    }
   };
 
   return (
@@ -80,6 +110,7 @@ const page = () => {
             <span>Mobile</span>
             <span>{userStorage?.mobile}</span>
           </div>
+
           <h2>Amounts Details</h2>
           <div className="row">
             <span>Tax: </span>
@@ -93,6 +124,7 @@ const page = () => {
             <span>Total Amount: </span>
             <span>{total + (total * TAX) / 100 + DELIVERY_CHARGE}</span>
           </div>
+
           <h2>Payment Methods</h2>
           <div className="row">
             <span>Cash on Delivery: </span>
@@ -108,4 +140,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default OrderPage;
